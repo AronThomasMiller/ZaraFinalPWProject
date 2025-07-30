@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-  "test:chrome": "npx playwright test --project=chromium",
-  "test:firefox": "npx playwright test --project=firefox",
-  "test:webkit": "npx playwright test --project=webkit",
-  "test:headed": "npx playwright test --headed",
-  "test:all": "npx playwright test"
-},
+    "test:chrome": "npx playwright test --project=chromium",
+    "test:firefox": "npx playwright test --project=firefox",
+    "test:webkit": "npx playwright test --project=webkit",
+    "test:headed": "npx playwright test --headed",
+    "test:all": "npx playwright test"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

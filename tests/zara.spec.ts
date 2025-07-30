@@ -1,10 +1,12 @@
-import { test, expect } from "@playwright/test";
+import { test } from "@playwright/test";
 import { SearchComponent } from "../pages/SearchComponent";
 import { HeaderComponent } from "../pages/HeaderComponent";
 import { SearchResultPage } from "../pages/SearchResultPage";
 import { RegistrationPage } from "../pages/RegistrationPage";
+import { getStealthContext } from "../utils/stealth-context";
 
-test("[ID1] E2E - Purchase a product with invalid credential ", async ({ page }) => {
+test("[ID1] E2E - Purchase a product with invalid credential ", async () => {
+  const { page, browser } = await getStealthContext(false);
   await page.goto("https://www.zara.com/ua/");
   await page
     .getByRole("button", { name: "Дозволити всі файли cookie" })
@@ -43,4 +45,5 @@ test("[ID1] E2E - Purchase a product with invalid credential ", async ({ page })
     "Це поле є обов’язковим для заповнення"
   );
   await registration.createAnOrder();
+  await browser.close();
 });
