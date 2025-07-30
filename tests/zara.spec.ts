@@ -1,0 +1,46 @@
+import { test, expect } from "@playwright/test";
+import { SearchComponent } from "../pages/SearchComponent";
+import { HeaderComponent } from "../pages/HeaderComponent";
+import { SearchResultPage } from "../pages/SearchResultPage";
+import { RegistrationPage } from "../pages/RegistrationPage";
+
+test("[ID1] E2E - Purchase a product with invalid credential ", async ({ page }) => {
+  await page.goto("https://www.zara.com/ua/");
+  await page
+    .getByRole("button", { name: "Дозволити всі файли cookie" })
+    .click();
+
+  const header = new HeaderComponent(page);
+  let amount = header.getCartAmount();
+
+  const search = new SearchComponent(page);
+
+  await search.clickSearchLink();
+  await search.searchForProduct("сукні");
+
+  const result = new SearchResultPage(page);
+  await result.waitForPlusButtons();
+  const buttonCount = await result.getPlusButtonCount();
+  await result.addItemWithMultipleSizes(buttonCount, await amount);
+
+  await page.getByRole("link", { name: "Товари в кошику" }).click();
+  await page.getByRole("button", { name: "ПРОДОВЖИТИ" }).click();
+
+  const registration = new RegistrationPage(page);
+  await registration.submitRegistration();
+  await registration.fillRegistrationForm("123", "12321321aasd");
+
+  await registration.expectEmailErrorMessage(
+    "Укажіть дійсну адресу ел. пошти (наприклад, email@email.com)."
+  );
+  await registration.expectPasswordErrorMessage(
+    "Введіть надійний пароль: Пароль повинен містити не менше 8 символів і складатись з великих і маленьких літер, а також цифр."
+  );
+  await registration.expectFirstNameErrorMessage(
+    "Це поле є обов’язковим для заповнення"
+  );
+  await registration.expectLastNameErrorMessage(
+    "Це поле є обов’язковим для заповнення"
+  );
+  await registration.createAnOrder();
+});
